@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class UI_StartScenes : MonoBehaviour
 {
     private Button _petSnackButton;
-    private Button _petSnackNormal;     // ´©··ÀÌ »ç·á.
-    private Button _petSnackRare;       // ÀÏ¹İ »ç·á.
-    private Button _petSnackSuperRare;  // °í±Ş »ç·á.
-
+    private Button _petSnackNormal;     // ëˆ„ë ì´ ì‚¬ë£Œ.
+    private Button _petSnackRare;       // ì¼ë°˜ ì‚¬ë£Œ.
+    private Button _petSnackSuperRare;  // ê³ ê¸‰ ì‚¬ë£Œ.
+    
     private Button _petPlayingButton;
-    private Button _petPlayingPatPat;   // ¾²´ã¾²´ã.
-    private Button _petPlayingPop;      // »§¾ß.
-    private Button _petPlayingTurn;     // µ¹¾Æ.
+    private Button _petPlayingPatPat;   // ì“°ë‹´ì“°ë‹´.
+    private Button _petPlayingPop;      // ë¹µì•¼.
+    private Button _petPlayingTurn;     // ëŒì•„.
 
     private Button _petWalking;
 
