@@ -4944,7 +4944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlanePrefab: {fileID: 4746618380129435136, guid: 0f5e7a00df03833489e40e6bff4ff562,
     type: 3}
-  m_DetectionMode: -1
+  m_DetectionMode: 1
 --- !u!114 &1659859601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5010,8 +5010,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.0032997131
-        value: 0.52272034
+        time: 0.0067710876
+        value: 0.2807846
         inSlope: 0
         outSlope: 0
         tangentMode: 0

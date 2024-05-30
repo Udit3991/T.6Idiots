@@ -31,18 +31,15 @@ namespace IF.Utils
         [SerializeField] private PhysicsRaycaster _physicsRaycaster;
         [SerializeField] private LineRenderer _lineRenderer;
 
-        private Vector2 _screenPosition = new Vector2();
         private float _counts = 0;
         private InputActions _inputActions;
-
+        private Vector2 _latestTouchPosition;
 
         private void Awake()
         {
             _inputActions = new InputActions();
             _inputActions.UI.AddCallbacks(this);
             _inputActions.Enable();
-
-            _screenPosition = new Vector2(Screen.currentResolution.height / 2, Screen.currentResolution.width / 2);
 
             if (_stopButton == null) _stopButton = transform.Find("ArrowButtons/Button - Stop").GetComponent<Button>();
             if (_resetButton == null) _resetButton = transform.Find("ArrowButtons/Button - Reset").GetComponent<Button>();
@@ -75,15 +72,24 @@ namespace IF.Utils
 
         private void Update()
         {
-            PhysicalRaycast();
+            PhysicalRaycasting();
             _countText.text = FloatToTime(_counts);
             ProgressVisualizer(_counts);
-            _lineRenderer.SetPosition(0, _cameraManager.transform.position - _cameraManager.transform.up * 0.5f);
-            _lineRenderer.SetPosition(1, _cameraManager.transform.position + _cameraManager.transform.forward * 0.5f);
-            _lineRenderer.SetPosition(2, _rb.position);
+
+            if (InScreen(_rb.transform.position))
+            {
+                _lineRenderer.enabled = false;
+            }
+            else
+            {
+                _lineRenderer.enabled = true;
+                _lineRenderer.SetPosition(0, _cameraManager.transform.position - _cameraManager.transform.up * 0.5f);
+                _lineRenderer.SetPosition(1, _cameraManager.transform.position + _cameraManager.transform.forward * 0.3f);
+                _lineRenderer.SetPosition(2, _rb.position);
+            }
         }
 
-        public void PhysicalRaycast()
+        public void PhysicalRaycasting()
         {
             if (Physics.Raycast(_cameraManager.transform.position, _cameraManager.transform.forward, float.PositiveInfinity, layerMask))
             {
@@ -155,28 +161,35 @@ namespace IF.Utils
         {
             print($"[{GetType()}({name})]: OnTrackedDeviceOrientation.");
         }
-
-        public void OnPoint(InputAction.CallbackContext context)
-        {
-        }
         #endregion
 
         private Vector2 positionStart = new Vector2();
 
+        public void OnPoint(InputAction.CallbackContext context)
+        {
+            _latestTouchPosition = context.ReadValue<Vector2>();
+        }
+
         public void OnClick(InputAction.CallbackContext context)
         {
             // todo: 끌었을때 힘의 작용 방향 보여주기
-
             if (context.ReadValueAsButton())
             {
-                positionStart = Mouse.current.position.ReadValue();
+                positionStart = _latestTouchPosition;
             }
             else
             {
-                print($"[{GetType()}({name})]: start={positionStart}, end={Mouse.current.position.ReadValue()}, force={Mouse.current.position.ReadValue() - positionStart}.");
-                _rb.AddForce(Mouse.current.position.ReadValue() - positionStart);
-                positionStart = Vector2.zero;
+                _rb.AddForce(_latestTouchPosition - positionStart);
             }
+        }
+
+        public bool InScreen(Vector3 worldPosition)
+        {
+            var position = Camera.main.WorldToViewportPoint(worldPosition);
+            print($"[{GetType()}({name})]: ({position.x}, {position.y}, {position})");
+
+            return position.x >= 0 && position.y >= 0 /*&& position.z >= 0*/ &&
+                   position.x <= 1 && position.y <= 1 /*&& position.z <= 1*/;
         }
     }
 }
